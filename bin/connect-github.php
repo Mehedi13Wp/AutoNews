@@ -51,7 +51,8 @@ try {
         throw new RuntimeException('This folder already has Git metadata. Use update.bat instead; existing Git history was left unchanged.');
     }
     $repository = getenv('AUTONEWS_CONNECT_REPOSITORY') ?: 'https://github.com/Mehedi13Wp/AutoNews.git';
-    $temporary = sys_get_temp_dir().DIRECTORY_SEPARATOR.'autonews-connect-'.bin2hex(random_bytes(6));
+    // Keep the clone on the project's drive so moving .git also works on Windows.
+    $temporary = dirname($project).DIRECTORY_SEPARATOR.'.autonews-connect-'.bin2hex(random_bytes(6));
     echo "Downloading AutoNews from GitHub...\n";
     command(['git', 'clone', '--branch', 'main', '--single-branch', '--depth', '1', $repository, $temporary]);
     $files = array_filter(explode("\0", command(['git', 'ls-files', '-z'], $temporary)));
